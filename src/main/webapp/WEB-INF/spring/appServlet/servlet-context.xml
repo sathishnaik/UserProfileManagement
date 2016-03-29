@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	 
+	  <beans:bean id="jspViewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <beans:property name="viewClass"
+            value="org.springframework.web.servlet.view.JstlView" />
+        <beans:property name="prefix" value="/WEB-INF/views/" />
+        <beans:property name="suffix" value=".jsp" />
+    </beans:bean>
+    
+    <beans:bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename" value="resources/messages" />
+        <beans:property name="defaultEncoding" value="UTF-8" />
+    </beans:bean>
+
+	<context:component-scan base-package="com.cg.springmvc" />
+	
+	 <beans:bean id="entityManagerFactoryBean" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <beans:property name="dataSource" ref="dataSource" />
+      <!-- This makes /META-INF/persistence.xml is no longer necessary -->
+      <beans:property name="packagesToScan" value="com.cg.springmvc.model" />
+      <!-- JpaVendorAdapter implementation for Hibernate EntityManager.
+           Exposes Hibernate's persistence provider and EntityManager extension interface -->
+      <beans:property name="jpaVendorAdapter">
+         <beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </beans:property>
+      <beans:property name="jpaProperties">
+         <beans:props>
+            <beans:prop key="hibernate.hbm2ddl.auto">validate</beans:prop>
+            <beans:prop key="show_sql">true</beans:prop> 
+            <beans:prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</beans:prop>
+         </beans:props>
+      </beans:property>
+   </beans:bean>
+	
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" >
+    <beans:property name="driverClassName" value="org.h2.Driver"/>
+    <beans:property name="url" value="jdbc:h2:~/test"/>
+    <beans:property name="username" value="sa"/>
+    <beans:property name="password" value=""/>
+	</beans:bean>
+
+<tx:annotation-driven />
+
+	<beans:bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <beans:property name="entityManagerFactory" ref="entityManagerFactoryBean" />
+  	 </beans:bean>
+
+	<beans:bean id="userValidator" class="com.cg.springmvc.validator.UserValidator" />
+	<beans:bean id="otpValidator" class="com.cg.springmvc.validator.OtpValidator" />
+	<beans:bean id="registerValidator" class="com.cg.springmvc.validator.RegisterValidator" />
+	<beans:bean id="updateValidator" class="com.cg.springmvc.validator.UpdateValidator" />
+
+	<beans:bean id="loginDelegate" class="com.cg.springmvc.delegate.LoginDelegate">
+        <beans:property name="loginService" ref="loginService"></beans:property>
+    </beans:bean>
+    
+    <beans:bean id="otpDelegate" class="com.cg.springmvc.delegate.OtpDelegate">
+        <beans:property name="otpService" ref="otpService"></beans:property>
+    </beans:bean>
+    
+    <beans:bean id="userDelegate" class="com.cg.springmvc.delegate.UserDelegate">
+        <beans:property name="userService" ref="userService"></beans:property>
+    </beans:bean>
+ 
+    <beans:bean id="userService" class="com.cg.springmvc.service.impl.UserServiceImpl">
+        <beans:property name="userDao" ref="userDao"></beans:property>
+    </beans:bean>
+    
+      <beans:bean id="otpService" class="com.cg.springmvc.service.impl.OtpServiceImpl">
+        <beans:property name="otpDao" ref="otpDao"></beans:property>
+    </beans:bean>
+    
+    <beans:bean id="loginService" class="com.cg.springmvc.service.impl.LoginServiceImpl">
+        <beans:property name="loginDao" ref="loginDao"></beans:property>
+    </beans:bean>
+    
+    <beans:bean id="userDao" class="com.cg.springmvc.dao.UserDAOImpl"/>
+  	<beans:bean id="loginDao" class="com.cg.springmvc.dao.LoginDAOImpl"/>
+    <beans:bean id="otpDao" class="com.cg.springmvc.dao.OtpDAOImpl"/>
+    
+    
+<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<!-- one of the properties available; the maximum file size in bytes -->
+<beans:property name="maxUploadSize" value="50000000" />
+</beans:bean>
+ 
+</beans:beans>
