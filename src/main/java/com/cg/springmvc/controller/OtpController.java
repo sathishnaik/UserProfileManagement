@@ -15,15 +15,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cg.springmvc.utils.OTPGenerator;
 import com.cg.springmvc.delegate.OtpDelegate;
 import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.Otp;
 import com.cg.springmvc.model.User;
 import com.cg.springmvc.utils.ConstantUtil;
+import com.cg.springmvc.utils.OTPGenerator;
 import com.cg.springmvc.validator.OtpValidator;
 
 @Controller
@@ -42,16 +41,14 @@ public class OtpController {
 	
 	/**
 	 * Go  to generate OTP page, an 8 character OTP will be generated
-	 * @param request
 	 * @param loginBean
 	 * @param result
-	 * @param status
 	 * @return
 	 */
 
 	@RequestMapping(value = ConstantUtil.GENERATE_OTP, method = RequestMethod.POST)
-	public ModelAndView generateOTP(HttpServletRequest request, @Valid @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN) User loginBean,
-			BindingResult result, SessionStatus status) {
+	public ModelAndView generateOTP(@Valid @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN) User loginBean,
+			BindingResult result) {
 		ModelAndView model = null;
 		try {
 			logger.info("inside generate OTP");

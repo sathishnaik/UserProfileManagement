@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,14 +45,12 @@ public class UserController {
 	 * @param updateBean
 	 * @param result
 	 * @param file
-	 * @param status
 	 * @return
 	 */
 	@RequestMapping(value = ConstantUtil.URL_UPDATE, params = ConstantUtil.PARAM_UPDATE, method = RequestMethod.POST)
 	public ModelAndView userUpdate(HttpServletRequest request,
 			@Valid @ModelAttribute(ConstantUtil.MODEL_OBJ_UPDATE_BEAN) User updateBean,
-			BindingResult result, @RequestParam(ConstantUtil.PARAM_IMAGE) MultipartFile file,
-			SessionStatus status) {
+			BindingResult result, @RequestParam(ConstantUtil.PARAM_IMAGE) MultipartFile file) {
 		logger.info("User Update method");
 		ModelAndView model = new ModelAndView(ConstantUtil.VIEW_UPDATE);
 		try {

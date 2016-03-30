@@ -71,7 +71,7 @@ public class LoginValidator implements Validator {
 					errors.rejectValue("otp.otpCode", "LoginValidator.otp.otpCode.wrong");
 				}
 	    	}else {
-	    		// check whether user has generated OTP
+	    		// user has not generated OTP yet
 				errors.rejectValue("otp.otpCode", "LoginValidator.otp.otpCode.generate");
 			}
 	    }

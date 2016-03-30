@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.binary.Base64;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,8 +29,8 @@ import com.cg.springmvc.model.UserAddress;
 import com.cg.springmvc.utils.ConstantUtil;
 import com.cg.springmvc.utils.SessionUtil;
 import com.cg.springmvc.utils.UserProfileUtil;
-import com.cg.springmvc.validator.RegisterValidator;
 import com.cg.springmvc.validator.LoginValidator;
+import com.cg.springmvc.validator.RegisterValidator;
 
 @Controller
 public class LoginController {
@@ -61,7 +59,7 @@ public class LoginController {
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView displayHomePage(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView displayHomePage() {
 		logger.info("Index/Login page");
 		ModelAndView model = new ModelAndView(ConstantUtil.VIEW_HOME);
 		model.addObject(ConstantUtil.MODEL_OBJ_LOGIN_BEAN, new User());
@@ -73,13 +71,12 @@ public class LoginController {
 	 * @param request
 	 * @param loginBean
 	 * @param result
-	 * @param status
 	 * @return
 	 */
 
 	@RequestMapping(value = ConstantUtil.URL_LOGIN, params = ConstantUtil.PARAM_LOGIN, method = RequestMethod.POST)
 	public ModelAndView executeLogin(HttpServletRequest request, @Valid @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN) User loginBean,
-			BindingResult result, SessionStatus status) {
+			BindingResult result) {
 		logger.info("Inside Login user method");
 		ModelAndView model = null;
 		try {
@@ -114,11 +111,8 @@ public class LoginController {
 	
 	/**
 	 * Go to Register Page
-	 * @param request
-	 * @param response
 	 * @param loginBean
 	 * @param result
-	 * @param status
 	 * @param map
 	 * @return
 	 */
@@ -139,22 +133,15 @@ public class LoginController {
 	
 	/**
 	 * User registration page, User can register themselves
-	 * @param request
-	 * @param response
 	 * @param file
 	 * @param loginBean
-	 * @param map
 	 * @param result
-	 * @param status
 	 * @return
 	 */
 
 	@RequestMapping(value = ConstantUtil.URL_REGISTER, method = RequestMethod.POST)
-	public ModelAndView register(HttpServletRequest request,
-			HttpServletResponse response,
-			@RequestParam(ConstantUtil.REQUEST_PARAM_IMAGE) MultipartFile file,
-			 @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN)@Valid User loginBean,BindingResult result,
-			Map<String, Object> map,  SessionStatus status) {
+	public ModelAndView register(@RequestParam(ConstantUtil.REQUEST_PARAM_IMAGE) MultipartFile file,
+			 @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN)@Valid User loginBean,BindingResult result) {
 		logger.info("Register User page");
 		ModelAndView model =  new ModelAndView(ConstantUtil.VIEW_REGISTER);
 		try {
