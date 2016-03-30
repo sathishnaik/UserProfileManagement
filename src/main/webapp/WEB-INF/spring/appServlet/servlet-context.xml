@@ -10,7 +10,6 @@
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
@@ -65,7 +64,7 @@
       <beans:property name="entityManagerFactory" ref="entityManagerFactoryBean" />
   	 </beans:bean>
 
-	<beans:bean id="userValidator" class="com.cg.springmvc.validator.UserValidator" />
+	<beans:bean id="loginValidator" class="com.cg.springmvc.validator.LoginValidator" />
 	<beans:bean id="otpValidator" class="com.cg.springmvc.validator.OtpValidator" />
 	<beans:bean id="registerValidator" class="com.cg.springmvc.validator.RegisterValidator" />
 	<beans:bean id="updateValidator" class="com.cg.springmvc.validator.UpdateValidator" />
@@ -100,7 +99,7 @@
     
     
 <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-<!-- one of the properties available; the maximum file size in bytes -->
+<!-- the maximum file size in bytes -->
 <beans:property name="maxUploadSize" value="50000000" />
 </beans:bean>
  

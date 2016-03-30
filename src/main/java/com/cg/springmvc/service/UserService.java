@@ -14,11 +14,7 @@ public interface UserService {
 
 	public void updateUser(User user);
 
-	public User getUserById(Integer userId);
-
 	public User getUserByUsername(String username);
-
-	public void removeUser(Integer id);
 
 	public List<State> getStates();
 

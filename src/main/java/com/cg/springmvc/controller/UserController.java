@@ -1,10 +1,7 @@
 package com.cg.springmvc.controller;
 
-import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.binary.Base64;
@@ -46,20 +43,17 @@ public class UserController {
 	/**
 	 * update user object
 	 * @param request
-	 * @param response
 	 * @param updateBean
 	 * @param result
 	 * @param file
 	 * @param status
-	 * @param map
 	 * @return
 	 */
 	@RequestMapping(value = ConstantUtil.URL_UPDATE, params = ConstantUtil.PARAM_UPDATE, method = RequestMethod.POST)
 	public ModelAndView userUpdate(HttpServletRequest request,
-			HttpServletResponse response,
 			@Valid @ModelAttribute(ConstantUtil.MODEL_OBJ_UPDATE_BEAN) User updateBean,
 			BindingResult result, @RequestParam(ConstantUtil.PARAM_IMAGE) MultipartFile file,
-			SessionStatus status, Map<String, Object> map) {
+			SessionStatus status) {
 		logger.info("User Update method");
 		ModelAndView model = new ModelAndView(ConstantUtil.VIEW_UPDATE);
 		try {
@@ -71,27 +65,29 @@ public class UserController {
 			}
 			
 			String filename = file.getOriginalFilename();
-			String base64Encoded = null;
+			String encodedImage = null;
 			if (filename.isEmpty()) {
-				byte[] encodeBase64 = Base64.encodeBase64(user.getImage());
-				base64Encoded = new String(encodeBase64, ConstantUtil.UTF_8);
+				byte[] encodeImage = Base64.encodeBase64(user.getImage());
+				encodedImage = new String(encodeImage, ConstantUtil.UTF_8);
 				updateBean.setImage(user.getImage());
 			} else {
-				byte[] encodeBase64 = Base64.encodeBase64(updateBean.getImage());
-				base64Encoded = new String(encodeBase64, ConstantUtil.UTF_8);
+				byte[] encodeImage = Base64.encodeBase64(updateBean.getImage());
+				encodedImage = new String(encodeImage, ConstantUtil.UTF_8);
 			}
-			model.addObject(ConstantUtil.USER_IMAGE, base64Encoded);
+			
+			model.addObject(ConstantUtil.USER_IMAGE, encodedImage);
 			model.addObject(ConstantUtil.MODEL_OBJ_UPDATE_BEAN, updateBean);
-			map.put(ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
+			model.addObject(ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
 
 			if (result.hasErrors()) {
 				return model;
 			} else {
-				// if username is updated then overwrite username session attribute
+				// maintain the coherence of one-to-one property
 				UserAddress userAddress = updateBean.getUserAddress();
 				userAddress.setUserObj(updateBean);
 			    updateBean.setUserAddress(userAddress);
 				userDelegate.updateUser(updateBean);
+				model.addObject("sucessMsg","User sucessfully updated");
 			}
 		}
 		catch (Exception e) {

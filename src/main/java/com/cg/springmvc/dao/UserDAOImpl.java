@@ -24,25 +24,10 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public void removeUser(Integer id) {
-		User user = manager.find(User.class, id);
-		if (null != user) {
-			manager.remove(user);
-		}
-	}
-
-	@Override
 	public void updateUser(User user) {
 		manager.merge(user);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public User getUserById(Integer userId) {
-		List<User> list = manager.createQuery("from User u where u.id = :userId").setParameter("userId", userId).getResultList();
-		return list.size() > 0 ? (User) list.get(0) : null;
-	}
-	
 	@Override
 	public List<State> getStates() {
 		 List<State> states = manager.createQuery("Select s From State s", State.class).getResultList();

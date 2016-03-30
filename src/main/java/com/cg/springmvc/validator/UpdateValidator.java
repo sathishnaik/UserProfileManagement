@@ -14,7 +14,6 @@ public class UpdateValidator implements Validator {
 	@Autowired
 	private UserDelegate userDelegate;
 
-
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
@@ -40,21 +39,12 @@ public class UpdateValidator implements Validator {
 
 		User userFromDB = userDelegate.getUserByUsername(formUserObj.getUsername());
 		
+		//Check if username is updated
 		if(userFromDB==null){
 			errors.rejectValue("username", "UpdateValidator.username.changed");
 		}
-		
-		
-		if (!errors.hasErrors()) {
-			if (!formUserObj.getUserAddress().getHouseNo().toString().matches(ConstantUtil.ID_PATTERN))
-				errors.rejectValue("userAddress.houseNo", "RegisterValidator.userAddress.houseNo");
-
-			if (!formUserObj.getEmail().matches(ConstantUtil.EMAIL_REGEX)) {
-				errors.rejectValue("email", "RegisterValidator.email");
-			}
-			
-			if (!formUserObj.getPassword().matches(ConstantUtil.PASSWORD_PATTERN))
-				errors.rejectValue("password", "RegisterValidator.password");
+		if (!formUserObj.getEmail().matches(ConstantUtil.EMAIL_REGEX)) {
+			errors.rejectValue("email", "RegisterValidator.email");
 		}
 	}
 }

@@ -31,7 +31,6 @@ public class RegisterValidator implements Validator{
 		validateRegister(formUserObj, errors);
 	}
 	
-	
 	private void validateRegister(User formUserObj, Errors errors) {
 		logger.info("House No"+formUserObj.getUserAddress().getHouseNo());
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "required.username", "Username is required field");
@@ -54,13 +53,14 @@ public class RegisterValidator implements Validator{
 	    	if(formUserObj.getPassword().length()<6||formUserObj.getPassword().length()>10){
 	    		errors.rejectValue("password", "RegisterValidator.password.range");
 	    	}
-	    	//check if profile image selected for upload
+	    	//check if profile image selected to upload
 	    	if(formUserObj.getImage().length==0){
 	    		errors.rejectValue("image", "RegisterValidator.image");
 	    	}
 	    		   
 	    	if (!formUserObj.getUserAddress().getHouseNo().toString().matches(ConstantUtil.ID_PATTERN))  
 	    		errors.rejectValue("userAddress.houseNo", "RegisterValidator.userAddress.houseNo");  
+	    	
 	    	// check for password pattern for alphanumeric
 	    	String password = formUserObj.getPassword();
 	    	if (password.matches(ConstantUtil.PASSWORD_PATTERN)&& (!password.matches("[!0-9]*")&&!password.matches("[!A-Za-z]*"))) {

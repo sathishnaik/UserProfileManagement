@@ -22,16 +22,8 @@ public class UserDelegate {
 		userService.addUser(user);
 	}
 
-	public void removeUser(Integer id) {
-		userService.removeUser(id);
-	}
-
 	public void updateUser(User user) {
 		userService.updateUser(user);
-	}
-
-	public User getUserById(Integer userId) {
-		return userService.getUserById(userId);
 	}
 
 	public User getUserByUsername(String username) {

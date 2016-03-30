@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cg.springmvc.OTPGenerator;
+import com.cg.springmvc.utils.OTPGenerator;
 import com.cg.springmvc.delegate.OtpDelegate;
 import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.Otp;

@@ -23,16 +23,8 @@ public class UserServiceImpl implements UserService {
 		userDao.addUser(user);
 	}
 
-	public void removeUser(Integer id) {
-		userDao.removeUser(id);
-	}
-
 	public void updateUser(User user) {
 		userDao.updateUser(user);
-	}
-
-	public User getUserById(Integer userId) {
-		return userDao.getUserById(userId);
 	}
 
 	public User getUserByUsername(String username) {
