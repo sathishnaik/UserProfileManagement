@@ -44,15 +44,6 @@
 			<div class="span12">
 				<fieldset>
         
-     <%--    <form:form id="loginForm" method="post" action="otp" modelAttribute="loginBean">
-          
-            <form:errors path="*" cssClass="alert alert-danger" element="div" />
-            <input type="submit" value="Generate OTP"/>
-            <center>OTP generated is  ${otp}</center>
-        </form:form> --%>
-        
-     
-        
         <form:form id="loginForm" commandName="loginBean" method="post" action="register" modelAttribute="loginBean" cssClass="form-horizontal" enctype="multipart/form-data">
            <form:errors path="*" cssClass="alert alert-danger" element="div" />
            

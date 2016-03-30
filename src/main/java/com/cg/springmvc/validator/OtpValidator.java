@@ -35,6 +35,7 @@ public class OtpValidator implements Validator{
 		boolean isUserExists = loginDelegate.isUserIDExists(username);
 		if(username==null||(username!=null && username.trim().length()==0)){
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "required.username", "Username is required");
+			//Check if username does not exists
 		}else if(!isUserExists){
         	errors.rejectValue("username", "OtpValidator.username.not.exists");
         }

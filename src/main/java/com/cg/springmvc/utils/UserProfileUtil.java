@@ -13,7 +13,6 @@ public class UserProfileUtil {
 		for (State state : list) {
 			states.put(state.getStateId(), state.getStateName());
 		}
-
 		return states;
 	}
 

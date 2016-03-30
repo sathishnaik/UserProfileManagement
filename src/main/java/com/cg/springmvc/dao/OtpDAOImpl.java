@@ -13,7 +13,7 @@ import com.cg.springmvc.model.Otp;
 @Transactional
 @Repository
 public class OtpDAOImpl implements OtpDAO {
-
+	
 	@PersistenceContext
     private EntityManager manager;
 

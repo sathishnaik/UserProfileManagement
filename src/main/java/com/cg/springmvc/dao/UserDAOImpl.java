@@ -15,7 +15,6 @@ import com.cg.springmvc.model.User;
 @Repository
 public class UserDAOImpl implements UserDAO {
 	
-
 	@PersistenceContext
     private EntityManager manager;
 

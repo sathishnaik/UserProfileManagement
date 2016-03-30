@@ -1,16 +1,19 @@
 package com.cg.springmvc.validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.User;
+import com.cg.springmvc.utils.ConstantUtil;
 
 public class UpdateValidator implements Validator {
+	
+	@Autowired
+	private UserDelegate userDelegate;
 
-	private static final String emailregex = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-	private static final String ID_PATTERN = "[0-9]+";
-	private static final String PASSWORD_PATTERN = "^[0-9a-z]+$";
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -23,7 +26,6 @@ public class UpdateValidator implements Validator {
 		// TODO Auto-generated method stub
 		User formUserObj = (User) target;
 		validateUpdate(formUserObj, errors);
-
 	}
 
 	private void validateUpdate(User formUserObj, Errors errors) {
@@ -36,19 +38,23 @@ public class UpdateValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userAddress.state_id","required.userAddress.state_id", "State is required field");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userAddress.country", "required.userAddress.country", "Country is required field");
 
+		User userFromDB = userDelegate.getUserByUsername(formUserObj.getUsername());
+		
+		if(userFromDB==null){
+			errors.rejectValue("username", "UpdateValidator.username.changed");
+		}
+		
+		
 		if (!errors.hasErrors()) {
-
-			if (!formUserObj.getUserAddress().getHouseNo().toString().matches(ID_PATTERN))
+			if (!formUserObj.getUserAddress().getHouseNo().toString().matches(ConstantUtil.ID_PATTERN))
 				errors.rejectValue("userAddress.houseNo", "RegisterValidator.userAddress.houseNo");
 
-			if (!formUserObj.getEmail().matches(emailregex)) {
+			if (!formUserObj.getEmail().matches(ConstantUtil.EMAIL_REGEX)) {
 				errors.rejectValue("email", "RegisterValidator.email");
 			}
 			
-			if (!formUserObj.getPassword().matches(PASSWORD_PATTERN))
+			if (!formUserObj.getPassword().matches(ConstantUtil.PASSWORD_PATTERN))
 				errors.rejectValue("password", "RegisterValidator.password");
-
 		}
 	}
-
 }

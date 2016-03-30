@@ -18,11 +18,6 @@ public class LoginDAOImpl implements LoginDAO{
 	@PersistenceContext
     private EntityManager manager;
 	
-	/*public LoginDAOImpl(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}*/
-
-	
 	@Override
 	public boolean isUserIDExists(String username) {
 		TypedQuery<User> query = manager.createQuery("from User u where u.username = :username",  User.class).setParameter("username", username);

@@ -20,6 +20,14 @@ public class DBUtil {
 		Connection conn = null;
 		   Statement stmt = null;
 		   try{
+			   
+			   String myString = "123456";
+			   System.out.println(myString.matches("[!A-Za-z0-9]*"));
+			   System.out.println(myString.matches("[!0-9]*"));
+			   System.out.println(myString.matches("[!A-Za-z]*"));
+			   System.out.println("Final:::"+(myString.matches("[!A-Za-z0-9]*")&&(!myString.matches("[!0-9]*")&&!myString.matches("[!A-Za-z]*"))));
+			   
+			   
 		      //STEP 2: Register JDBC driver
 		      Class.forName(JDBC_DRIVER);
 
@@ -33,10 +41,10 @@ public class DBUtil {
 		      
 		      String sql = "select * from USER";
 		      ResultSet rs=stmt.executeQuery(sql); 
-		      System.out.println(rs);
+		      /*System.out.println(rs);
 		      while(rs.next()){  
 		    	  System.out.println(rs.getInt(1)+" "+rs.getString(2));  
-		    	  }  
+		    	  }  */
 		   }catch(SQLException se){
 		      //Handle errors for JDBC
 		      se.printStackTrace();

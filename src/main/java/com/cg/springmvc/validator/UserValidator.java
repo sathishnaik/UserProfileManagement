@@ -14,22 +14,22 @@ import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.User;
 
 public class UserValidator implements Validator{
+	
+	@Autowired
+	private LoginDelegate loginDelegate;
 
-	 @Autowired
-	    private LoginDelegate loginDelegate;
-	 
-	 @Autowired
-	    private UserDelegate userDelegate;
-	 
-	 @Autowired
-	    private OtpDelegate otpDelegate;
+	@Autowired
+	private UserDelegate userDelegate;
+
+	@Autowired
+	private OtpDelegate otpDelegate;
 
 	@Override
 	public boolean supports(Class<?> arg0) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
 	  public void validate(Object obj, Errors errors) {
 	    User formUserObj = (User) obj;

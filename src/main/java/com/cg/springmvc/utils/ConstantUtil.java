@@ -45,5 +45,13 @@ public class ConstantUtil {
 	public static final String PARAM_UPDATE = "Update";
 
 	public static final String URL_UPDATE = "/update";
+	
+	public static final String EMAIL_REGEX = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";  
+	
+	public static final String ID_PATTERN = "[0-9]+";  
+	
+	public static final String PASSWORD_PATTERN = "[!A-Za-z0-9]*";  
+	
+	public static final String LOGGED_IN_USER = "loggedInUser";
 
 }

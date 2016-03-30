@@ -1,5 +1,7 @@
 package com.cg.springmvc.validator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -7,15 +9,14 @@ import org.springframework.validation.Validator;
 
 import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.User;
+import com.cg.springmvc.utils.ConstantUtil;
 
 public class RegisterValidator implements Validator{
 	
-	private static final String emailregex = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";  
-	 private static final String ID_PATTERN = "[0-9]+";  
-	 private static final String PASSWORD_PATTERN = "^[0-9a-z]+$";  
-	
-	 @Autowired
-	    private UserDelegate userDelegate;
+	private static final Logger logger = LoggerFactory.getLogger(RegisterValidator.class);
+
+	@Autowired
+	private UserDelegate userDelegate;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -27,11 +28,12 @@ public class RegisterValidator implements Validator{
 	public void validate(Object target, Errors errors) {
 		// TODO Auto-generated method stub
 		User formUserObj = (User) target;
-	    validateRegister(formUserObj, errors);
-		
+		validateRegister(formUserObj, errors);
 	}
 	
+	
 	private void validateRegister(User formUserObj, Errors errors) {
+		logger.info("House No"+formUserObj.getUserAddress().getHouseNo());
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "required.username", "Username is required field");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "required.password", "Password is required field");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "required.email", "Email is required field");
@@ -48,25 +50,27 @@ public class RegisterValidator implements Validator{
 	    	if(userFromDB!=null &&userFromDB.getUsername().equals(formUserObj.getUsername())){
 	    		errors.rejectValue("username", "RegisterValidator.username.exists");
 	    	}
-	    	if(formUserObj.getPassword().length()<3||formUserObj.getPassword().length()>10){
+	    	//check for password range
+	    	if(formUserObj.getPassword().length()<6||formUserObj.getPassword().length()>10){
 	    		errors.rejectValue("password", "RegisterValidator.password.range");
 	    	}
-	    	
+	    	//check if profile image selected for upload
 	    	if(formUserObj.getImage().length==0){
 	    		errors.rejectValue("image", "RegisterValidator.image");
 	    	}
 	    		   
-	    	if (!formUserObj.getUserAddress().getHouseNo().toString().matches(ID_PATTERN))  
+	    	if (!formUserObj.getUserAddress().getHouseNo().toString().matches(ConstantUtil.ID_PATTERN))  
 	    		errors.rejectValue("userAddress.houseNo", "RegisterValidator.userAddress.houseNo");  
-	    	
-	    	if (!formUserObj.getPassword().matches(PASSWORD_PATTERN))  
+	    	// check for password pattern for alphanumeric
+	    	String password = formUserObj.getPassword();
+	    	if (password.matches(ConstantUtil.PASSWORD_PATTERN)&& (!password.matches("[!0-9]*")&&!password.matches("[!A-Za-z]*"))) {
+	    		logger.info("Password is alpha numeric");
+	    	}else
 		    	errors.rejectValue("password", "RegisterValidator.password");  
 	    		
-	    	if (!formUserObj.getEmail().matches(emailregex))   {
+	    	if (!formUserObj.getEmail().matches(ConstantUtil.EMAIL_REGEX))   {
 	    		errors.rejectValue("email", "RegisterValidator.email");  
 	    	}
-		    	
 	    }
       }
-
 }

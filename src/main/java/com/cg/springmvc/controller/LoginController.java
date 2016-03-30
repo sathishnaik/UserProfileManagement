@@ -30,6 +30,7 @@ import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.User;
 import com.cg.springmvc.model.UserAddress;
 import com.cg.springmvc.utils.ConstantUtil;
+import com.cg.springmvc.utils.SessionUtil;
 import com.cg.springmvc.utils.UserProfileUtil;
 import com.cg.springmvc.validator.RegisterValidator;
 import com.cg.springmvc.validator.UserValidator;
@@ -87,6 +88,8 @@ public class LoginController {
 		try {
 			validator.validate(loginBean, result);
 			User bean = userDelegate.getUserByUsername(loginBean.getUsername());
+			SessionUtil.createNewSession(request);
+			SessionUtil.putSessionValue(request, ConstantUtil.LOGGED_IN_USER, bean);
 			if (result.hasErrors()) {
 				FieldError errorField = result.getFieldError(ConstantUtil.FIELD_OTP_OTP_ID);
 				//remove expired OTP
@@ -142,7 +145,6 @@ public class LoginController {
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws ServletException {
 		// Convert multipart object to byte[]
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
-
 	}
 	
 	/**
@@ -161,8 +163,8 @@ public class LoginController {
 	public ModelAndView register(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(ConstantUtil.REQUEST_PARAM_IMAGE) MultipartFile file,
-			@Valid @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN) User loginBean,
-			Map<String, Object> map, BindingResult result, SessionStatus status) {
+			 @ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN)@Valid User loginBean,BindingResult result,
+			Map<String, Object> map,  SessionStatus status) {
 		logger.info("Register User page");
 		ModelAndView model = null;
 		try {

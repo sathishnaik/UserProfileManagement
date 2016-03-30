@@ -89,6 +89,7 @@ public class OtpController {
 	public String backToLogin(HttpServletRequest request,
 			HttpServletResponse response,
 			@ModelAttribute(ConstantUtil.MODEL_OBJ_LOGIN_BEAN) User loginBean) {
+		logger.info("Back to Login Page");
 		return ConstantUtil.VIEW_HOME;
 	}
 	
