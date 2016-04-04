@@ -12,7 +12,7 @@ import com.cg.springmvc.model.User;
 public interface UserService {
 	public void addUser(User user);
 
-	public void updateUser(User user);
+	public User updateUser(User user);
 
 	public User getUserByUsername(String username);
 

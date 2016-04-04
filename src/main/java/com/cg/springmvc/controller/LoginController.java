@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.cg.springmvc.delegate.OtpDelegate;
 import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.User;
-import com.cg.springmvc.model.UserAddress;
 import com.cg.springmvc.utils.ConstantUtil;
 import com.cg.springmvc.utils.SessionUtil;
 import com.cg.springmvc.utils.UserProfileUtil;
@@ -59,10 +58,12 @@ public class LoginController {
 	 */
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView displayHomePage() {
+	public ModelAndView displayHomePage(HttpServletRequest request) {
 		logger.info("Index/Login page");
 		ModelAndView model = new ModelAndView(ConstantUtil.VIEW_HOME);
 		model.addObject(ConstantUtil.MODEL_OBJ_LOGIN_BEAN, new User());
+		SessionUtil.createNewSession(request);
+		SessionUtil.putSessionValue(request, ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
 		return model;
 	}
 	
@@ -91,6 +92,7 @@ public class LoginController {
 				logger.info("User Login Successful");
 				SessionUtil.createNewSession(request);
 				SessionUtil.putSessionValue(request, ConstantUtil.LOGGED_IN_USER, bean);
+				SessionUtil.putSessionValue(request, ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
 				//Encode Base64 for image
 				byte[] encodeImage = Base64.encodeBase64(bean.getImage());
 				String encodedImage = new String(encodeImage, ConstantUtil.UTF_8);
@@ -98,7 +100,6 @@ public class LoginController {
 				model = new ModelAndView(ConstantUtil.VIEW_UPDATE);
 				model.addObject(ConstantUtil.MODEL_OBJ_UPDATE_BEAN, bean);
 				model.addObject(ConstantUtil.USER_IMAGE, encodedImage);
-				model.addObject(ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
 				//Remove otp on successful login
 				otpDelegate.removeOtpById(bean.getOtp().getOtpId());
 			}
@@ -146,17 +147,12 @@ public class LoginController {
 		ModelAndView model =  new ModelAndView(ConstantUtil.VIEW_REGISTER);
 		try {
 			registerValidator.validate(loginBean, result);
-			model.addObject(ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
 
 			if (result.hasErrors()) {
 				model.addObject(ConstantUtil.MODEL_OBJ_LOGIN_BEAN, loginBean);
 				return model;
 			} else {
 				loginBean.setImage(file.getBytes());
-				// maintain the coherence of one-to-one property
-				UserAddress userAddress = loginBean.getUserAddress();
-				userAddress.setUserObj(loginBean);
-				loginBean.setUserAddress(userAddress);
 				userDelegate.addUser(loginBean);
 				model = new ModelAndView(ConstantUtil.VIEW_HOME);
 				model.addObject(ConstantUtil.MODEL_OBJ_LOGIN_BEAN, loginBean);

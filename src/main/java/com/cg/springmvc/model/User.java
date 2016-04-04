@@ -93,21 +93,12 @@ public class User implements Serializable {
 		this.image = image;
 	}
 
-/*	public String getOtpCode() {
-		return otpCode;
-	}
-
-	public void setOtpCode(String otpCode) {
-		this.otpCode = otpCode;
-	}*/
-
 	public UserAddress getUserAddress() {
 		return userAddress;
 	}
 
 	public void setUserAddress(UserAddress userAddress) {
 		this.userAddress = userAddress;
-		this.id = userAddress.getAddressId();
 	}
 	
 }

@@ -15,31 +15,32 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  
-<body>
+<style type="text/css">
+	#main {
+		background-color: #F4BBFF;
+	}
+</style>
+
+ 
+<body id="main">
        <div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12">
 				<fieldset>
-        
-       <%--  <form:form id="loginForm" method="post" action="otp" modelAttribute="loginBean">
-          
-            
-            <input type="submit" value="Generate OTP"/>
-            
-        </form:form> --%>
-        
-     
+				
+				<div class="page-header">
+  <h3>User Profile Management</h3>
+</div>  
         
         <form:form id="otpBean" method="post" action="login" commandName="otpBean" modelAttribute="otpBean" cssClass="form-horizontal">
-         <center>OTP generated is  ${otp}</center>
+         
             <div class="form-group">
-            <form:label path="username" cssClass="control-label col-xs-4">User-Name</form:label>
-            <div class="col-xs-5"><form:input id="username" name="username" path="username" cssClass="form-control" /></div>
+            <form:label path="username" cssClass="control-label col-xs-3">User-Name</form:label>
+            <div class="col-xs-4"><form:input id="username" name="username" path="username" cssClass="form-control" cssStyle="background-color: #A2A2D0"/></div>
             </div>
              <div class="form-group">
-             <form:label path="otp" cssClass="control-label col-xs-4">Generated OTP</form:label>
-            <div class="col-xs-5"><form:input id="otp" name="otp" path="otp.otpCode" cssClass="form-control"/></div>
+             <form:label path="otp" cssClass="control-label col-xs-3">Generated OTP</form:label>
+            <div class="col-xs-4"><form:input id="otp" name="otp" path="otp.otpCode" cssClass="form-control" cssStyle="background-color: #A2A2D0"/></div>
             </div>
             
             

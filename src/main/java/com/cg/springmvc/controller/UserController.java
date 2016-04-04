@@ -22,10 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.cg.springmvc.delegate.UserDelegate;
 import com.cg.springmvc.model.User;
-import com.cg.springmvc.model.UserAddress;
 import com.cg.springmvc.utils.ConstantUtil;
 import com.cg.springmvc.utils.SessionUtil;
-import com.cg.springmvc.utils.UserProfileUtil;
 import com.cg.springmvc.validator.UpdateValidator;
 
 @Controller
@@ -55,35 +53,21 @@ public class UserController {
 		ModelAndView model = new ModelAndView(ConstantUtil.VIEW_UPDATE);
 		try {
 			updateValidator.validate(updateBean, result);
-			User userFromSession = (User)SessionUtil.getSessionValue(request, ConstantUtil.LOGGED_IN_USER);
-			User user = userDelegate.getUserByUsername(updateBean.getUsername());
-			if(user==null){
-				user = userFromSession;
-			}
 			
-			String filename = file.getOriginalFilename();
-			String encodedImage = null;
-			if (filename.isEmpty()) {
-				byte[] encodeImage = Base64.encodeBase64(user.getImage());
-				encodedImage = new String(encodeImage, ConstantUtil.UTF_8);
+			User user = (User)SessionUtil.getSessionValue(request, ConstantUtil.LOGGED_IN_USER);
+			//if profile pic not changed get the image from session
+			if (file.getOriginalFilename().isEmpty()) {
 				updateBean.setImage(user.getImage());
-			} else {
-				byte[] encodeImage = Base64.encodeBase64(updateBean.getImage());
-				encodedImage = new String(encodeImage, ConstantUtil.UTF_8);
-			}
+			} 
+			
+			byte[] encodeImage = Base64.encodeBase64(updateBean.getImage());
+			String encodedImage = new String(encodeImage, ConstantUtil.UTF_8);
 			
 			model.addObject(ConstantUtil.USER_IMAGE, encodedImage);
 			model.addObject(ConstantUtil.MODEL_OBJ_UPDATE_BEAN, updateBean);
-			model.addObject(ConstantUtil.STATES, UserProfileUtil.getStates(userDelegate.getStates()));
 
-			if (result.hasErrors()) {
-				return model;
-			} else {
-				// maintain the coherence of one-to-one property
-				UserAddress userAddress = updateBean.getUserAddress();
-				userAddress.setUserObj(updateBean);
-			    updateBean.setUserAddress(userAddress);
-				userDelegate.updateUser(updateBean);
+			if (!result.hasErrors()) {
+				SessionUtil.putSessionValue(request, ConstantUtil.LOGGED_IN_USER, userDelegate.updateUser(updateBean));
 				model.addObject("sucessMsg","User sucessfully updated");
 			}
 		}
@@ -100,7 +84,8 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = ConstantUtil.URL_UPDATE, params = ConstantUtil.PARAM_LOGOUT, method = RequestMethod.POST)
-	public ModelAndView backToLogin(HttpServletRequest request, @ModelAttribute(ConstantUtil.MODEL_OBJ_UPDATE_BEAN) User updateBean) {
+	public ModelAndView backToLogin(HttpServletRequest request, @Valid@ModelAttribute(ConstantUtil.MODEL_OBJ_UPDATE_BEAN) User updateBean,
+			BindingResult result) {
 		logger.info("Log Out of the application");
 		ModelAndView model = new ModelAndView(ConstantUtil.VIEW_HOME);
 		updateBean = new User();

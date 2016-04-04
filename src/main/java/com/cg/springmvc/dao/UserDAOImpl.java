@@ -24,8 +24,8 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public void updateUser(User user) {
-		manager.merge(user);
+	public User updateUser(User user) {
+		return manager.merge(user);
 	}
 
 	@Override

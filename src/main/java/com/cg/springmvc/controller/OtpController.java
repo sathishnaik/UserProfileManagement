@@ -1,8 +1,5 @@
 package com.cg.springmvc.controller;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -19,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.cg.springmvc.delegate.OtpDelegate;
 import com.cg.springmvc.delegate.UserDelegate;
-import com.cg.springmvc.model.Otp;
 import com.cg.springmvc.model.User;
 import com.cg.springmvc.utils.ConstantUtil;
 import com.cg.springmvc.utils.OTPGenerator;
@@ -62,15 +58,8 @@ public class OtpController {
 				String otpGenerated = OTPGenerator.generateOTP();
 				model = new ModelAndView(ConstantUtil.VIEW_OTP);
 				
-				Otp otpObj = user.getOtp();
-				otpObj = fillOtp(otpGenerated, user.getOtp(), user);
-
-				// Update existing OTP
-				if (otpObj.getOtpId() != 0) 
-					otpObj = otpDelegate.updateOtp(otpObj);
-				// User creating OTP first time, Add new OTP
-				 else 
-					 otpDelegate.addOtp(otpObj);
+				otpDelegate.addOrUpdateOtp(otpGenerated, user);
+				
 				model.addObject(ConstantUtil.MODEL_OBJ_OTP_BEAN, user);
 				return model;
 			}
@@ -90,22 +79,4 @@ public class OtpController {
 		return ConstantUtil.VIEW_HOME;
 	}
 	
-	private Otp fillOtp(String generatedOtpCode, Otp otpObj, User user){
-		
-		if (otpObj != null) {
-			otpObj.setOtpCode(generatedOtpCode);
-			otpObj.setOtpTime(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			return otpObj;
-		} else {
-			// User creating OTP first time, Add new OTP
-			Otp newOtp = new Otp();
-			newOtp.setOtpCode(generatedOtpCode);
-			newOtp.setOtpTime(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			user.setOtp(newOtp);
-			newOtp.setUser(user);
-			return newOtp;
-		}
-		
-	}
-
 }

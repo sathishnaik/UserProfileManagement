@@ -1,6 +1,7 @@
 package com.cg.springmvc.delegate;
 
 import com.cg.springmvc.model.Otp;
+import com.cg.springmvc.model.User;
 import com.cg.springmvc.service.OtpService;
 
 public class OtpDelegate {
@@ -14,13 +15,9 @@ public class OtpDelegate {
 	public void setOtpService(OtpService otpService) {
 		this.otpService = otpService;
 	}
-
-	public void addOtp(Otp otp) {
-		otpService.addOtp(otp);
-	}
-
-	public Otp updateOtp(Otp otp) {
-		return otpService.updateOtp(otp);
+	
+	public Otp addOrUpdateOtp(String otpGenerated, User user){
+		return otpService.addOrUpdateOtp(otpGenerated, user);
 	}
 
 	public void removeOtpById(Integer id) {

@@ -22,8 +22,8 @@ public class UserDelegate {
 		userService.addUser(user);
 	}
 
-	public void updateUser(User user) {
-		userService.updateUser(user);
+	public User updateUser(User user) {
+		return userService.updateUser(user);
 	}
 
 	public User getUserByUsername(String username) {

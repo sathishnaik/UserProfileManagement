@@ -1,7 +1,11 @@
 package com.cg.springmvc.service.impl;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+
 import com.cg.springmvc.dao.OtpDAO;
 import com.cg.springmvc.model.Otp;
+import com.cg.springmvc.model.User;
 import com.cg.springmvc.service.OtpService;
 
 public class OtpServiceImpl implements OtpService {
@@ -15,9 +19,21 @@ public class OtpServiceImpl implements OtpService {
 	public void setOtpDao(OtpDAO otpDao) {
 		this.otpDao = otpDao;
 	}
-
-	public void addOtp(Otp otp) {
-		otpDao.addOtp(otp);
+	
+	public Otp addOrUpdateOtp(String otpGenerated, User user){
+		if(user.getOtp()!=null){
+			user.getOtp().setOtpCode(otpGenerated);
+			user.getOtp().setOtpTime(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			return  otpDao.updateOtp(user.getOtp());
+		}else{
+			Otp newOtp = new Otp();
+			newOtp.setOtpCode(otpGenerated);
+			newOtp.setOtpTime(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+			user.setOtp(newOtp);
+			newOtp.setUser(user);
+			otpDao.addOtp(newOtp);
+			return newOtp;
+		}
 	}
 
 	public void removeOtp(Integer id) {
@@ -26,10 +42,6 @@ public class OtpServiceImpl implements OtpService {
 
 	public Otp getOtpById(Integer id) {
 		return otpDao.getOtpById(id);
-	}
-
-	public Otp updateOtp(Otp otp) {
-		return otpDao.updateOtp(otp);
 	}
 
 }

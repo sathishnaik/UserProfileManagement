@@ -32,7 +32,7 @@ public class OtpValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username","required.username", "Username is required");
 
 		// Check if username does not exists
-		if (!isUserExists)
+		if (!isUserExists && !errors.hasErrors())
 			errors.rejectValue("username", "OtpValidator.username.not.exists");
 
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import com.cg.springmvc.dao.UserDAO;
 import com.cg.springmvc.model.State;
 import com.cg.springmvc.model.User;
+import com.cg.springmvc.model.UserAddress;
 import com.cg.springmvc.service.UserService;
 
 public class UserServiceImpl implements UserService {
@@ -20,11 +21,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void addUser(User user) {
+		// maintain the coherence of one-to-one property
+		UserAddress userAddress = user.getUserAddress();
+		userAddress.setUserObj(user);
+		user.setUserAddress(userAddress);
 		userDao.addUser(user);
 	}
 
-	public void updateUser(User user) {
-		userDao.updateUser(user);
+	public User updateUser(User user) {
+		return userDao.updateUser(user);
 	}
 
 	public User getUserByUsername(String username) {
